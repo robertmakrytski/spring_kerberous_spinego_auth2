@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:11.1.2-jammy
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: test1
+      MARIADB_USER: test1
+      MARIADB_PASSWORD: test1
+      MARIADB_DATABASE: testsecurity
+    healthcheck:
+      test: healthcheck.sh --su-mysql --connect
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+  spring-security-sample:
+    image: spring-security-sample:latest
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3307/testsecurity
+      SPRING_DATASOURCE_USERNAME: test1
+      SPRING_DATASOURCE_PASSWORD: test1
+    depends_on:
+      mariadb:
+        condition: service_healthy
+volumes:
+  mariadb-2_data:

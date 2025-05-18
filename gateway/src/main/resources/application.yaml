@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          messaging-client-oidc:
+            provider: spring
+            client-id: messaging-client
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+            scope: openid, profile
+            client-name: messaging-client-oidc
+        provider:
+          spring:
+            issuer-uri: http://localhost:9000
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: userinfo
+            uri: http://localhost:9000
+            predicates:
+              - Path=/userinfo
+            filters:
+              - TokenRelay=
+          - id: messages
+            uri: http://localhost:8090
+            predicates:
+              - Path=/messages
+            filters:
+              - TokenRelay=
+
+app:
+  base-uri: http://127.0.0.1:4200
