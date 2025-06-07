@@ -6,8 +6,8 @@ app.gateway: http://gdev.test
 server:
   port: 9000
   servlet.session.cookie.name: Your_custome_name
-  servlet:
-    context-path : /account
+#  servlet:
+#    context-path : /account
 
 logging:
   level:

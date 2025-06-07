@@ -1,7 +1,7 @@
 app:
   base-uri: http://gdev.test
   gateway: http://gdev.test
-  account: http://gdev.test/account
+  account: http://account.gdev.test
 server:
   port: 8080
 
@@ -35,13 +35,6 @@ spring:
             uri: http://localhost:9000
             predicates:
               - Path=/userinfo
-            filters:
-              - TokenRelay=
-              - RewritePath=/userinfo, /account/userinfo
-          - id: account
-            uri: http://localhost:9000
-            predicates:
-              - Path=/account/**
             filters:
               - TokenRelay=
           - id: messages

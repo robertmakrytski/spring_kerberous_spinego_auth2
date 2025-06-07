@@ -50,7 +50,7 @@ public class NegoriateResponseAndProcessKerberosTicketFilter extends OncePerRequ
 			KerberosTicketValidation ticketValidation = ticketValidator.validateTicket(kerberosTicket);
 			usernamesMap.put(request.getSession().getId(), ticketValidation.username());
 			log.debug("Successfully validated " + ticketValidation.username());
-		} else if ("POST".equals(request.getMethod()) && path.equals("/account/login") && flagAd) {
+		} else if ("POST".equals(request.getMethod()) && path.equals("/login") && flagAd) {
 			log.info("found post and loging");
 			response.addHeader("WWW-Authenticate", "Negotiate");
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
