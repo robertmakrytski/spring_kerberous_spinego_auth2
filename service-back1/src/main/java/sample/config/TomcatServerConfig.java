@@ -26,10 +26,10 @@ import org.springframework.context.annotation.Configuration;
  * @author Joe Grandja
  * @since 1.3
  */
-@Configuration(proxyBeanMethods = false)
+//@Configuration(proxyBeanMethods = false)
 public class TomcatServerConfig {
 
-	@Bean
+	//@Bean
 	public WebServerFactoryCustomizer<TomcatServletWebServerFactory> connectorCustomizer() {
 		return (tomcat) -> tomcat.addAdditionalTomcatConnectors(createHttpConnector());
 	}

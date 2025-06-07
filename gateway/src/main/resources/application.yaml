@@ -1,13 +1,16 @@
+app:
+  base-uri: http://gdev.test
+  gateway: http://gdev.test
+  account: http://gdev.test/account
 server:
   port: 8080
 
 logging:
   level:
     root: INFO
-    org.springframework.web: INFO
+    org.springframework.web: DEBUG
     org.springframework.security: INFO
-    org.springframework.security.oauth2: INFO
-
+    org.springframework.security.oauth2: TRACE
 spring:
   security:
     oauth2:
@@ -18,12 +21,12 @@ spring:
             client-id: messaging-client
             client-secret: secret
             authorization-grant-type: authorization_code
-            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+            redirect-uri: "${app.gateway}/login/oauth2/code/{registrationId}"
             scope: openid, profile
             client-name: messaging-client-oidc
         provider:
           spring:
-            issuer-uri: http://localhost:9000
+            issuer-uri: ${app.account}
   cloud:
     gateway:
       mvc:
@@ -34,6 +37,13 @@ spring:
               - Path=/userinfo
             filters:
               - TokenRelay=
+              - RewritePath=/userinfo, /account/userinfo
+          - id: account
+            uri: http://localhost:9000
+            predicates:
+              - Path=/account/**
+            filters:
+              - TokenRelay=
           - id: messages
             uri: http://localhost:8090
             predicates:
@@ -41,5 +51,3 @@ spring:
             filters:
               - TokenRelay=
 
-app:
-  base-uri: http://127.0.0.1:4200

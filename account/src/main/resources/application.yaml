@@ -1,9 +1,18 @@
+spring.main.allow-bean-definition-overriding: true
+app.gateway: http://gdev.test
+
+#u
+#app.gateway: http://127.0.0.1:8080
 server:
   port: 9000
+  servlet.session.cookie.name: Your_custome_name
+  servlet:
+    context-path : /account
 
 logging:
   level:
     org.springframework.security: trace
+    org.springframework.web: trace
 
 spring:
   security:
@@ -24,10 +33,10 @@ spring:
                 - "refresh_token"
                 - "client_credentials"
               redirect-uris:
-                - "http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc"
-                - "http://127.0.0.1:8080/authorized"
+                - "${app.gateway}/login/oauth2/code/messaging-client-oidc"
+                - "${app.gateway}/authorized"
               post-logout-redirect-uris:
-                - "http://127.0.0.1:8080/logged-out"
+                - "${app.gateway}/logged-out"
               scopes:
                 - "openid"
                 - "profile"

@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
 
   login(): void {
     // The Backend is configured to trigger login when unauthenticated
-    window.location.href = environment.backendBaseUrl;
+    window.location.href = environment.backendBaseUrl + '/oauth2/authorization/messaging-client-oidc';
   }
 
   logout(): void {

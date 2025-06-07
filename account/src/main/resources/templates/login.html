@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Страница входа</title>
+</head>
+<body>
+<div class="login-container">
+    <div class="text">
+    Введите данные для входа:
+    </div>
+    <div th:if="${errorMessage}"
+         class="alert alert-danger alert-dismissible fade show"
+         role="alert"
+         style="border-left: 4px solid #dc3545;">
+        <strong>Ошибка!</strong>
+        <span th:text="${errorMessage}"></span>
+    </div>
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <input type="text" id="username" name="username" placeholder="Имя пользователя" required autofocus/>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" name="password" placeholder="Пароль" required/>
+        </div>
+        <div class="form-group">
+            <button type="submit">Вход</button>
+        </div>
+    </form>
+    <form th:action="@{/login?AD=true}" method="post">
+        <div class="form-group">
+            <input type="text" id="username" name="username" value="testname"  placeholder="Имя пользователя" hidden="true" />
+        </div>
+        </br>
+        </br>
+        <div class="form-group" hidden="true">
+            <input type="password" id="password" name="password" value="testpass" placeholder="Пароль"/>
+        </div>
+        <div class="form-group" >
+            <button type="submit">Вход с АД</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

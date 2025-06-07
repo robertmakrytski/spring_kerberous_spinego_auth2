@@ -68,8 +68,7 @@ public class SecurityConfig {
 		// @formatter:off
 		http
 			.authorizeHttpRequests(authorize ->
-				authorize
-					.anyRequest().authenticated()
+			authorize.anyRequest().authenticated()
 			)
 			.csrf(csrf ->
 				csrf

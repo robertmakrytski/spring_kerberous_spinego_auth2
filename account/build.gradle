@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.10'
+	id 'org.springframework.boot' version '3.4.5'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -18,11 +18,20 @@ repositories {
 }
 
 dependencies {
+implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.mariadb.jdbc:mariadb-java-client'
+	
+	implementation 'org.springframework.security.kerberos:spring-security-kerberos-core:2.1.1'
+	implementation 'org.springframework.security.kerberos:spring-security-kerberos-client:2.1.1'
+	implementation 'org.springframework.security.kerberos:spring-security-kerberos-web:2.1.1'
+//	implementation group: 'org.springframework.security.kerberos', name: 'spring-security-kerberos-web', version: '2.0.0'
+//	implementation group: 'org.springframework.security.kerberos', name: 'spring-security-kerberos-client', version: '2.0.0'
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
