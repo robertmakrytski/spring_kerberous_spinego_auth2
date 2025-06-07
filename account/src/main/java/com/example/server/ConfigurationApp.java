@@ -1,8 +1,5 @@
 package com.example.server;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -14,11 +11,16 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.kerberos.authentication.KerberosAuthenticationProvider;
 import org.springframework.security.kerberos.authentication.sun.SunJaasKerberosTicketValidator;
+import org.springframework.security.kerberos.web.authentication.SpnegoAuthenticationProcessingFilter;
+import org.springframework.security.kerberos.web.authentication.SpnegoEntryPoint;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import lombok.extern.slf4j.Slf4j;
@@ -62,20 +64,18 @@ public class ConfigurationApp {
 	@Order(2)
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager)
 			throws Exception {
+		SpnegoAuthenticationProcessingFilter s = new SpnegoAuthenticationProcessingFilter();
+		s.setAuthenticationManager(authenticationManager);
 		// switch off csrf for our custom page, to simplify protection
-		http.csrf(c -> c.ignoringRequestMatchers("/login", "/public/loginAD"));
-		http.authorizeHttpRequests(
-				(authorize) -> authorize.requestMatchers("/login").permitAll().anyRequest().authenticated())
+		http.csrf(c -> c.ignoringRequestMatchers("/login", "/login/ad"));
+		http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
 				.formLogin(f -> f.loginPage("/login").permitAll()).formLogin(Customizer.withDefaults())
-				// add filter for SpnegoEntryPoint
-				.addFilterBefore(tf(), UsernamePasswordAuthenticationFilter.class);
+				.addFilterBefore(s, UsernamePasswordAuthenticationFilter.class)
+				.exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(new SpnegoEntryPoint(),
+						new AntPathRequestMatcher("/login/ad", "POST"))
 
+				);
 		return http.build();
-	}
-
-	@Bean
-	NegoriateResponseAndProcessKerberosTicketFilter tf() {
-		return new NegoriateResponseAndProcessKerberosTicketFilter();
 	}
 
 	@Bean
@@ -89,20 +89,13 @@ public class ConfigurationApp {
 
 	@Bean
 	AuthenticationManager authManager(HttpSecurity http) throws Exception {
+		KerberosAuthenticationProvider k = new KerberosAuthenticationProvider();
 		DaoAuthenticationProvider d = new DaoAuthenticationProvider();
+		d.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
 		d.setUserDetailsService(userService::getByUsername);
+		k.setUserDetailsService(userService::getByUsername);
 		return http.getSharedObject(AuthenticationManagerBuilder.class).authenticationProvider(d)
-				.authenticationProvider(kt()).build();
-	}
-
-	@Bean("usernamesMap")
-	Map<String, String> mapUsernames() {
-		return new HashMap<>();
-	}
-
-	@Bean
-	CustomDaoProvider kt() {
-		return new CustomDaoProvider();
+				.authenticationProvider(k).build();
 	}
 
 }

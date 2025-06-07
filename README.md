@@ -1,3 +1,6 @@
+## We can login with username and password with login form of the oauth2, but we can do this with AD.
+
+
 ## The project describes an example of Active directory and oauth2, gateway
 
 Where kerbefos is used for ad, the problem is in combining kerberos and Ad, since there is no grand type PASSWORD.

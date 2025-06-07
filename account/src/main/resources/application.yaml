@@ -13,7 +13,9 @@ logging:
   level:
     org.springframework.security: trace
     org.springframework.web: trace
-
+  file:
+    name: account.log # Specifies the name of the log file
+    path: ./
 spring:
   security:
 #    user:

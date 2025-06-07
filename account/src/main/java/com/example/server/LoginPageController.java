@@ -21,7 +21,6 @@ public class LoginPageController {
 				session.removeAttribute("LAST_AUTH_EXCEPTION");
 			}
 		}
-		model.addAttribute("clientUrl", "http://gdev.test/account/public/loginAD");
 		return "login";
 	}
 }

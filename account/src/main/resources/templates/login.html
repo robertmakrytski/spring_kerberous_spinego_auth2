@@ -27,15 +27,7 @@
             <button type="submit">Вход</button>
         </div>
     </form>
-    <form th:action="@{/login?AD=true}" method="post">
-        <div class="form-group">
-            <input type="text" id="username" name="username" value="testname"  placeholder="Имя пользователя" hidden="true" />
-        </div>
-        </br>
-        </br>
-        <div class="form-group" hidden="true">
-            <input type="password" id="password" name="password" value="testpass" placeholder="Пароль"/>
-        </div>
+    <form th:action="@{/login/ad}" method="post">
         <div class="form-group" >
             <button type="submit">Вход с АД</button>
         </div>
